@@ -7,6 +7,7 @@ Future<void> flavorMain(Environment environment) async {
   try {
     WidgetsFlutterBinding.ensureInitialized();
     FlavorConfig(environment: environment); 
+    await FlavorConfig.instance.init();
     runApp(LawyerBroApp());
   } catch (e) {
     throw Exception('Error initializing app: $e');

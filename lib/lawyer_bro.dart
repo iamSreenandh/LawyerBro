@@ -11,10 +11,10 @@ class LawyerBroApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,    
+      debugShowCheckedModeBanner: false,
       title: 'LawyerBro',
       theme: AppTheme.light,
-      // darkTheme: AppTheme.dark,
+    //  darkTheme: AppTheme.dark,
       // themeMode: ThemeMode.system,
       initialRoute: '/',
       routes: {
