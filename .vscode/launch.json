@@ -1,0 +1,48 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "lawyer_bro dev",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/app_environment/entry_point/flavor_development.dart",
+            "args": [
+                "--flavor",
+                "development",
+                "--target",
+                "lib/app_environment/entry_point/flavor_development.dart"
+            ]
+        },
+        {
+            "name": "lawyer_bro staging",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/app_environment/entry_point/flavor_staging.dart",
+            "args": [
+                "--flavor",
+                "staging",
+                "--target",
+                "lib/app_environment/entry_point/flavor_staging.dart"
+            ]
+        },
+        {
+            "name": "lawyer_bro production",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/app_environment/entry_point/flavor_production.dart",
+            "args": [
+                "--flavor",
+                "production",
+                "--target",
+                "lib/app_environment/entry_point/flavor_production.dart"
+            ]
+        },
+        {
+            "name": "lawyer_bro (release mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+             
+        }
+    ]
+}
