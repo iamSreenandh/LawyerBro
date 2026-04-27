@@ -19,6 +19,12 @@ dev_dependencies:
     sdk: flutter
 
   flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.13.1
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/lawyer_bro_logo.jpg"
 
 # The following section is specific to Flutter packages.
 flutter:
