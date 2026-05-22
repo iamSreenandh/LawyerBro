@@ -1,0 +1,40 @@
+workflows:
+  flutter-app:
+    name: Lawyer Bro
+    max_build_duration: 120
+    instance_type: mac_mini_m1
+    
+    environment:
+      flutter: 3.35.8
+      xcode: latest
+      cocoapods: default
+
+    scripts:
+      - name: Get Flutter packages
+        script: flutter pub get
+
+      - name: Install iOS Pods
+        script: |
+          cd ios
+          pod install
+
+      - name: Run tests (optional)
+        script: flutter test
+
+      - name: Build Android APK
+        script: flutter build apk --release
+
+      - name: Build iOS App
+        script: flutter build ios --release --no-codesign
+
+    publishing: 
+      email:
+        recipients:
+          - sreenandhtp2003@gmail.com
+        notify:
+          success: true
+          failure: true    
+
+    artifacts:
+      - build/app/outputs/flutter-apk/*.apk
+      - build/ios/iphoneos/*.app
