@@ -24,7 +24,8 @@ dev_dependencies:
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets/images/lawyer_bro_logo.jpg"
+  remove_alpha_ios: true
+  image_path: "assets/images/logo (2).png"
 
 # The following section is specific to Flutter packages.
 flutter:
