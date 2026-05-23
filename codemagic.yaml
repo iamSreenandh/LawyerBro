@@ -5,7 +5,7 @@ workflows:
   # Publishes: Android → Firebase App Distribution
   #            iOS     → TestFlight
   # ============================================================
-  development:
+  development_workflow:
     name: LawyerBro Development
     max_build_duration: 60
     instance_type: mac_mini_m1
@@ -106,7 +106,7 @@ workflows:
   # Publishes: Android → Firebase App Distribution
   #            iOS     → TestFlight
   # ============================================================
-  staging:
+  staging_workflow:
     name: LawyerBro Staging
     max_build_duration: 60
     instance_type: mac_mini_m1
@@ -208,7 +208,7 @@ workflows:
   # Publishes: Android → Firebase App Distribution
   #            iOS     → TestFlight
   # ============================================================
-  production:
+  production_workflow:
     name: LawyerBro Production
     max_build_duration: 60
     instance_type: mac_mini_m1
