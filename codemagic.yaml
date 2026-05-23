@@ -84,9 +84,8 @@ workflows:
             --token "$FIREBASE_TOKEN"
 
     artifacts:
-      - build/app/outputs/flutter-apk/*development*.apk
+      - build/app/outputs/**/*.aab
       - build/ios/ipa/*.ipa
-      - flutter_drive.log
 
     publishing:
       app_store_connect:
