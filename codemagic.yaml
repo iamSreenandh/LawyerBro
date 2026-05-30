@@ -87,12 +87,12 @@ workflows:
       - build/app/outputs/**/*.aab
       - build/ios/ipa/*.ipa
 
-    publishing:
-      app_store_connect:
-        auth: integration
-        is_enabled: false
-        submit_to_testflight: false
-        submit_to_app_store: false
+    # publishing:
+    #   app_store_connect:
+    #     auth: integration
+    #     is_enabled: false
+    #     submit_to_testflight: false
+    #     submit_to_app_store: false
       email:
         recipients:
           - sreenandhtp2003@gmail.com
