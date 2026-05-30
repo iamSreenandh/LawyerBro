@@ -84,10 +84,10 @@ workflows:
             --token "$FIREBASE_TOKEN"
 
     artifacts:
-      - build/app/outputs/**/*.aab
+      - build/**/outputs/**/*.apk
       - build/ios/ipa/*.ipa
 
-    # publishing:
+    publishing:
     #   app_store_connect:
     #     auth: integration
     #     is_enabled: false
