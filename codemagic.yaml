@@ -5,13 +5,13 @@ workflows:
   # Publishes: Android → Firebase App Distribution
   #            iOS     → TestFlight
   # ============================================================
-  development_workflow:
+  dev-build-workflow:
     name: LawyerBro Development
     max_build_duration: 60
     instance_type: mac_mini_m1
 
     environment:
-      flutter: 3.35.8
+      flutter: 3.38.5
       xcode: latest
       cocoapods: default
       groups:
@@ -84,15 +84,15 @@ workflows:
             --token "$FIREBASE_TOKEN"
 
     artifacts:
-      - build/app/outputs/**/*.aab
+      - build/**/outputs/**/*.apk
       - build/ios/ipa/*.ipa
 
     publishing:
-      app_store_connect:
-        auth: integration
-        is_enabled: true
-        submit_to_testflight: true
-        submit_to_app_store: false
+    #   app_store_connect:
+    #     auth: integration
+    #     is_enabled: false
+    #     submit_to_testflight: false
+    #     submit_to_app_store: false
       email:
         recipients:
           - sreenandhtp2003@gmail.com
@@ -106,204 +106,204 @@ workflows:
   # Publishes: Android → Firebase App Distribution
   #            iOS     → TestFlight
   # ============================================================
-  staging_workflow:
-    name: LawyerBro Staging
-    max_build_duration: 60
-    instance_type: mac_mini_m1
+  # staging_workflow:
+  #   name: LawyerBro Staging
+  #   max_build_duration: 60
+  #   instance_type: mac_mini_m1
 
-    environment:
-      flutter: 3.35.8
-      xcode: latest
-      cocoapods: default
-      groups:
-        - firebase_credentials
-        - app_store_credentials
-        - android_keystore
-      vars:
-        FLAVOR: staging
-        DART_ENTRY: lib/app_environment/entry_point/flavor_staging.dart
-        FIREBASE_ANDROID_APP_ID: $FIREBASE_ANDROID_APP_ID_STG
-        TESTER_GROUPS: internal-testers
+  #   environment:
+  #     flutter: 3.35.8
+  #     xcode: latest
+  #     cocoapods: default
+  #     groups:
+  #       - firebase_credentials
+  #       - app_store_credentials
+  #       - android_keystore
+  #     vars:
+  #       FLAVOR: staging
+  #       DART_ENTRY: lib/app_environment/entry_point/flavor_staging.dart
+  #       FIREBASE_ANDROID_APP_ID: $FIREBASE_ANDROID_APP_ID_STG
+  #       TESTER_GROUPS: internal-testers
 
-    triggering:
-      events:
-        - push
-      branch_patterns:
-        - pattern: staging
-          include: true
-          source: true
+  #   triggering:
+  #     events:
+  #       - push
+  #     branch_patterns:
+  #       - pattern: staging
+  #         include: true
+  #         source: true
 
-    cache:
-      cache_paths:
-        - $HOME/Library/Caches/CocoaPods
-        - $HOME/.pub-cache
-        - $HOME/.gradle
-        - $HOME/.android
+  #   cache:
+  #     cache_paths:
+  #       - $HOME/Library/Caches/CocoaPods
+  #       - $HOME/.pub-cache
+  #       - $HOME/.gradle
+  #       - $HOME/.android
 
-    scripts:
-      # ---- Common Setup ----
-      - name: Get Flutter packages
-        script: flutter pub get
+  #   scripts:
+  #     # ---- Common Setup ----
+  #     - name: Get Flutter packages
+  #       script: flutter pub get
 
-      - name: Run tests
-        script: flutter test
-        ignore_failure: true
+  #     - name: Run tests
+  #       script: flutter test
+  #       ignore_failure: true
 
-      # ---- Android Build ----
-      - name: Build Android APK (Staging)
-        script: flutter build apk --release --flavor $FLAVOR -t $DART_ENTRY
+  #     # ---- Android Build ----
+  #     - name: Build Android APK (Staging)
+  #       script: flutter build apk --release --flavor $FLAVOR -t $DART_ENTRY
 
-      # ---- iOS Setup & Build ----
-      - name: Set up iOS code signing
-        script: |
-          keychain initialize
-          app-store-connect fetch-signing-files \
-            --type IOS_APP_DEVELOPMENT \
-            --create
-          keychain add-certificates
-          xcode-project use-profiles
+  #     # ---- iOS Setup & Build ----
+  #     - name: Set up iOS code signing
+  #       script: |
+  #         keychain initialize
+  #         app-store-connect fetch-signing-files \
+  #           --type IOS_APP_DEVELOPMENT \
+  #           --create
+  #         keychain add-certificates
+  #         xcode-project use-profiles
 
-      - name: Build iOS IPA (Staging)
-        script: |
-          flutter build ipa --release \
-            --flavor $FLAVOR \
-            -t $DART_ENTRY \
-            --export-options-plist=/Users/builder/export_options.plist
+  #     - name: Build iOS IPA (Staging)
+  #       script: |
+  #         flutter build ipa --release \
+  #           --flavor $FLAVOR \
+  #           -t $DART_ENTRY \
+  #           --export-options-plist=/Users/builder/export_options.plist
 
-      # ---- Publish to Firebase App Distribution (Android) ----
-      - name: Publish Android to Firebase App Distribution
-        script: |
-          appdistribution_artifact=$(find build/app/outputs/flutter-apk -name "*$FLAVOR-release.apk" | head -1)
-          if [ -z "$appdistribution_artifact" ]; then
-            echo "No APK found for flavor $FLAVOR"
-            exit 1
-          fi
-          echo "Uploading $appdistribution_artifact"
-          firebase appdistribution:distribute "$appdistribution_artifact" \
-            --app "$FIREBASE_ANDROID_APP_ID" \
-            --groups "$TESTER_GROUPS" \
-            --token "$FIREBASE_TOKEN"
+  #     # ---- Publish to Firebase App Distribution (Android) ----
+  #     - name: Publish Android to Firebase App Distribution
+  #       script: |
+  #         appdistribution_artifact=$(find build/app/outputs/flutter-apk -name "*$FLAVOR-release.apk" | head -1)
+  #         if [ -z "$appdistribution_artifact" ]; then
+  #           echo "No APK found for flavor $FLAVOR"
+  #           exit 1
+  #         fi
+  #         echo "Uploading $appdistribution_artifact"
+  #         firebase appdistribution:distribute "$appdistribution_artifact" \
+  #           --app "$FIREBASE_ANDROID_APP_ID" \
+  #           --groups "$TESTER_GROUPS" \
+  #           --token "$FIREBASE_TOKEN"
 
-    artifacts:
-      - build/app/outputs/flutter-apk/*staging*.apk
-      - build/ios/ipa/*.ipa
-      - flutter_drive.log
+  #   artifacts:
+  #     - build/app/outputs/flutter-apk/*staging*.apk
+  #     - build/ios/ipa/*.ipa
+  #     - flutter_drive.log
 
-    publishing:
-      app_store_connect:
-        auth: integration
-        is_enabled: true
-        submit_to_testflight: true
-        submit_to_app_store: false
-      email:
-        recipients:
-          - sreenandhtp2003@gmail.com
-        notify:
-          success: true
-          failure: true
+  #   publishing:
+  #     app_store_connect:
+  #       auth: integration
+  #       is_enabled: true
+  #       submit_to_testflight: true
+  #       submit_to_app_store: false
+  #     email:
+  #       recipients:
+  #         - sreenandhtp2003@gmail.com
+  #       notify:
+  #         success: true
+  #         failure: true
 
-  # ============================================================
-  # PRODUCTION FLAVOR
-  # Trigger: main branch | Manual
-  # Publishes: Android → Firebase App Distribution
-  #            iOS     → TestFlight
-  # ============================================================
-  production_workflow:
-    name: LawyerBro Production
-    max_build_duration: 60
-    instance_type: mac_mini_m1
+  # # ============================================================
+  # # PRODUCTION FLAVOR
+  # # Trigger: main branch | Manual
+  # # Publishes: Android → Firebase App Distribution
+  # #            iOS     → TestFlight
+  # # ============================================================
+  # production_workflow:
+  #   name: LawyerBro Production
+  #   max_build_duration: 60
+  #   instance_type: mac_mini_m1
 
-    environment:
-      flutter: 3.35.8
-      xcode: latest
-      cocoapods: default
-      groups:
-        - firebase_credentials
-        - app_store_credentials
-        - android_keystore
-      vars:
-        FLAVOR: production
-        DART_ENTRY: lib/app_environment/entry_point/flavor.production.dart
-        FIREBASE_ANDROID_APP_ID: $FIREBASE_ANDROID_APP_ID_PROD
-        TESTER_GROUPS: internal-testers
+  #   environment:
+  #     flutter: 3.35.8
+  #     xcode: latest
+  #     cocoapods: default
+  #     groups:
+  #       - firebase_credentials
+  #       - app_store_credentials
+  #       - android_keystore
+  #     vars:
+  #       FLAVOR: production
+  #       DART_ENTRY: lib/app_environment/entry_point/flavor.production.dart
+  #       FIREBASE_ANDROID_APP_ID: $FIREBASE_ANDROID_APP_ID_PROD
+  #       TESTER_GROUPS: internal-testers
 
-    triggering:
-      events:
-        - push
-      branch_patterns:
-        - pattern: main
-          include: true
-          source: true
+  #   triggering:
+  #     events:
+  #       - push
+  #     branch_patterns:
+  #       - pattern: main
+  #         include: true
+  #         source: true
 
-    cache:
-      cache_paths:
-        - $HOME/Library/Caches/CocoaPods
-        - $HOME/.pub-cache
-        - $HOME/.gradle
-        - $HOME/.android
+  #   cache:
+  #     cache_paths:
+  #       - $HOME/Library/Caches/CocoaPods
+  #       - $HOME/.pub-cache
+  #       - $HOME/.gradle
+  #       - $HOME/.android
 
-    scripts:
-      # ---- Common Setup ----
-      - name: Get Flutter packages
-        script: flutter pub get
+  #   scripts:
+  #     # ---- Common Setup ----
+  #     - name: Get Flutter packages
+  #       script: flutter pub get
 
-      - name: Run tests
-        script: flutter test
-        ignore_failure: true
+  #     - name: Run tests
+  #       script: flutter test
+  #       ignore_failure: true
 
-      # ---- Android Build (APK + AAB for production) ----
-      - name: Build Android APK (Production)
-        script: flutter build apk --release --flavor $FLAVOR -t $DART_ENTRY
+  #     # ---- Android Build (APK + AAB for production) ----
+  #     - name: Build Android APK (Production)
+  #       script: flutter build apk --release --flavor $FLAVOR -t $DART_ENTRY
 
-      - name: Build Android App Bundle (Production)
-        script: flutter build appbundle --release --flavor $FLAVOR -t $DART_ENTRY
+  #     - name: Build Android App Bundle (Production)
+  #       script: flutter build appbundle --release --flavor $FLAVOR -t $DART_ENTRY
 
-      # ---- iOS Setup & Build ----
-      - name: Set up iOS code signing
-        script: |
-          keychain initialize
-          app-store-connect fetch-signing-files \
-            --type IOS_APP_STORE \
-            --create
-          keychain add-certificates
-          xcode-project use-profiles
+  #     # ---- iOS Setup & Build ----
+  #     - name: Set up iOS code signing
+  #       script: |
+  #         keychain initialize
+  #         app-store-connect fetch-signing-files \
+  #           --type IOS_APP_STORE \
+  #           --create
+  #         keychain add-certificates
+  #         xcode-project use-profiles
 
-      - name: Build iOS IPA (Production)
-        script: |
-          flutter build ipa --release \
-            --flavor $FLAVOR \
-            -t $DART_ENTRY \
-            --export-options-plist=/Users/builder/export_options.plist
+  #     - name: Build iOS IPA (Production)
+  #       script: |
+  #         flutter build ipa --release \
+  #           --flavor $FLAVOR \
+  #           -t $DART_ENTRY \
+  #           --export-options-plist=/Users/builder/export_options.plist
 
-      # ---- Publish to Firebase App Distribution (Android) ----
-      - name: Publish Android to Firebase App Distribution
-        script: |
-          appdistribution_artifact=$(find build/app/outputs/flutter-apk -name "*$FLAVOR-release.apk" | head -1)
-          if [ -z "$appdistribution_artifact" ]; then
-            echo "No APK found for flavor $FLAVOR"
-            exit 1
-          fi
-          echo "Uploading $appdistribution_artifact"
-          firebase appdistribution:distribute "$appdistribution_artifact" \
-            --app "$FIREBASE_ANDROID_APP_ID" \
-            --groups "$TESTER_GROUPS" \
-            --token "$FIREBASE_TOKEN"
+  #     # ---- Publish to Firebase App Distribution (Android) ----
+  #     - name: Publish Android to Firebase App Distribution
+  #       script: |
+  #         appdistribution_artifact=$(find build/app/outputs/flutter-apk -name "*$FLAVOR-release.apk" | head -1)
+  #         if [ -z "$appdistribution_artifact" ]; then
+  #           echo "No APK found for flavor $FLAVOR"
+  #           exit 1
+  #         fi
+  #         echo "Uploading $appdistribution_artifact"
+  #         firebase appdistribution:distribute "$appdistribution_artifact" \
+  #           --app "$FIREBASE_ANDROID_APP_ID" \
+  #           --groups "$TESTER_GROUPS" \
+  #           --token "$FIREBASE_TOKEN"
 
-    artifacts:
-      - build/app/outputs/flutter-apk/*production*.apk
-      - build/app/outputs/bundle/productionRelease/*.aab
-      - build/ios/ipa/*.ipa
-      - flutter_drive.log
+  #   artifacts:
+  #     - build/app/outputs/flutter-apk/*production*.apk
+  #     - build/app/outputs/bundle/productionRelease/*.aab
+  #     - build/ios/ipa/*.ipa
+  #     - flutter_drive.log
 
-    publishing:
-      app_store_connect:
-        auth: integration
-        is_enabled: true
-        submit_to_testflight: true
-        submit_to_app_store: false
-      email:
-        recipients:
-          - sreenandhtp2003@gmail.com
-        notify:
-          success: true
-          failure: true
+  #   publishing:
+  #     app_store_connect:
+  #       auth: integration
+  #       is_enabled: true
+  #       submit_to_testflight: true
+  #       submit_to_app_store: false
+  #     email:
+  #       recipients:
+  #         - sreenandhtp2003@gmail.com
+  #       notify:
+  #         success: true
+  #         failure: true
