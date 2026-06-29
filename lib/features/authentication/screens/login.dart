@@ -72,7 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       setState(() => _isPasswordVisible = !_isPasswordVisible),
                 ),
               ),
-              
+
               // Forgot Password
               Align(
                 alignment: Alignment.centerRight,
@@ -87,50 +87,53 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 20),
 
               // Login Button
               SizedBox(
                 width: double.infinity,
                 height: 56,
                 child: ElevatedButton(
-                  onPressed: () => Navigator.of(context).pushReplacementNamed('/home'),
+                  onPressed: () =>
+                      Navigator.of(context).pushReplacementNamed('/home'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primary,
                     foregroundColor: AppColors.textOnPrimary,
                     elevation: 0,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
                   ),
                   child: const Text('Log In', style: AppTextStyles.button),
                 ),
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 20),
 
-              // Social Login
-              Center(
-                child: Column(
-                  children: [
-                    Text(
-                      'Or Login With',
-                      style: AppTextStyles.bodyMedium.copyWith(
-                        color: AppColors.textSecondary,
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        _SocialButton(icon: Icons.g_mobiledata, color: AppColors.error, onPressed: () {}),
-                        const SizedBox(width: 20),
-                        _SocialButton(icon: Icons.camera_alt_outlined, color: Colors.purple, onPressed: () {}),
-                        const SizedBox(width: 20),
-                        _SocialButton(icon: Icons.flutter_dash_outlined, color: Colors.blue, onPressed: () {}),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 48),
+              // // Social Login
+              // Center(
+              //   child: Column(
+              //     children: [
+              //       Text(
+              //         'Or Login With',
+              //         style: AppTextStyles.bodyMedium.copyWith(
+              //           color: AppColors.textSecondary,
+              //         ),
+              //       ),
+              //       const SizedBox(height: 24),
+              //       Row(
+              //         mainAxisAlignment: MainAxisAlignment.center,
+              //         children: [
+              //           _SocialButton(icon: Icons.g_mobiledata, color: AppColors.error, onPressed: () {}),
+              //           const SizedBox(width: 20),
+              //           _SocialButton(icon: Icons.camera_alt_outlined, color: Colors.purple, onPressed: () {}),
+              //           const SizedBox(width: 20),
+              //           _SocialButton(icon: Icons.flutter_dash_outlined, color: Colors.blue, onPressed: () {}),
+              //         ],
+              //       ),
+              //     ],
+              //   ),
+              // ),
+              // const SizedBox(height: 48),
 
               // Footer
               Center(
@@ -197,41 +200,50 @@ class _AuthTextField extends StatelessWidget {
         style: AppTextStyles.bodyLarge.copyWith(color: AppColors.textPrimary),
         decoration: InputDecoration(
           hintText: hintText,
-          hintStyle: AppTextStyles.bodyLarge.withColor(AppColors.textSecondary.withValues(alpha: 0.5)),
-          prefixIcon: Icon(prefixIcon, color: AppColors.textSecondary, size: 22),
+          hintStyle: AppTextStyles.bodyLarge.withColor(
+            AppColors.textSecondary.withValues(alpha: 0.5),
+          ),
+          prefixIcon: Icon(
+            prefixIcon,
+            color: AppColors.textSecondary,
+            size: 22,
+          ),
           suffixIcon: suffixIcon,
           border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 16,
+          ),
         ),
       ),
     );
   }
 }
 
-class _SocialButton extends StatelessWidget {
-  final IconData icon;
-  final Color color;
-  final VoidCallback onPressed;
+// class _SocialButton extends StatelessWidget {
+//   final IconData icon;
+//   final Color color;
+//   final VoidCallback onPressed;
 
-  const _SocialButton({
-    required this.icon,
-    required this.color,
-    required this.onPressed,
-  });
+//   const _SocialButton({
+//     required this.icon,
+//     required this.color,
+//     required this.onPressed,
+//   });
 
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onPressed,
-      child: Container(
-        width: 56,
-        height: 56,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          border: Border.all(color: AppColors.border),
-        ),
-        child: Icon(icon, color: color, size: 32),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return InkWell(
+//       onTap: onPressed,
+//       child: Container(
+//         width: 56,
+//         height: 56,
+//         decoration: BoxDecoration(
+//           shape: BoxShape.circle,
+//           border: Border.all(color: AppColors.border),
+//         ),
+//         child: Icon(icon, color: color, size: 32),
+//       ),
+//     );
+//   }
+// }
