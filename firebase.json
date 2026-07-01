@@ -1,0 +1,22 @@
+{
+    "flutter": {
+        "platforms": {
+            "android": {
+                "default": {
+                    "projectId": "lawyerbrohdev",
+                    "appId": "1:872795441984:android:b49f0248ef55d4d4dbc8a5",
+                    "fileOutput": "android/app/google-services.json"
+                }
+            },
+            "dart": {
+                "lib/firebase_options.dart": {
+                    "projectId": "lawyerbrohdev",
+                    "configurations": {
+                        "android": "1:872795441984:android:b49f0248ef55d4d4dbc8a5",
+                        "ios": "1:872795441984:ios:162a2777c1e0447bdbc8a5"
+                    }
+                }
+            }
+        }
+    }
+}

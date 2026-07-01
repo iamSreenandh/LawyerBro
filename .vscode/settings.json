@@ -1,4 +1,4 @@
 {
-    "dart.flutterSdkPath": "C:\\Expereal Technologies\\app_buywalk_in\\.fvm\\flutter_sdk",
-    "java.configuration.updateBuildConfiguration": "interactive"
+  "dart.flutterSdkPath": ".fvm/versions/3.35.7",
+  "java.configuration.updateBuildConfiguration": "interactive"
 }

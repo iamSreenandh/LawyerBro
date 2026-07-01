@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "50774480844",
+    "project_id": "lawyerbroh",
+    "storage_bucket": "lawyerbroh.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:50774480844:android:d17c59eee29d08d322ef69",
+        "android_client_info": {
+          "package_name": "com.example.lawyer_bro"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBbq9wTzrklGYEp--zfz9c7u25k7Ycz51Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

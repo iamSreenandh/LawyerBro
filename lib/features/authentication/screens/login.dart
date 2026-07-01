@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lawyer_bro/features/authentication/bloc/authentication_bloc.dart';
 import 'package:lawyer_bro/styles/app_colors.dart';
 import 'package:lawyer_bro/styles/app_text_styles.dart';
+import 'package:lawyer_bro/utils/snakbar.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -77,7 +80,7 @@ class _LoginScreenState extends State<LoginScreen> {
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(
-                  onPressed: () {}, // TODO: Forgot password
+                  onPressed: () {},
                   child: Text(
                     'Forgot password?',
                     style: AppTextStyles.labelLarge.copyWith(
@@ -88,53 +91,48 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-
               // Login Button
-              SizedBox(
-                width: double.infinity,
-                height: 56,
-                child: ElevatedButton(
-                  onPressed: () =>
-                      Navigator.of(context).pushReplacementNamed('/home'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    foregroundColor: AppColors.textOnPrimary,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                  ),
-                  child: const Text('Log In', style: AppTextStyles.button),
-                ),
+              BlocConsumer<AuthenticationBloc, AuthenticationState>(
+                listener: (context, state) {
+                  if (state is AuthenticationSuccess) {
+                    Navigator.of(context).pushReplacementNamed('/home');
+                  } else if (state is AuthenticationFailure) {
+                    showSnackBar(state.error, context, isError: true);
+                  }
+                },
+                builder: (context, state) {
+                  return SizedBox(
+                    width: double.infinity,
+                    height: 56,
+                    child: state is AuthenticationLoading
+                        ? const Center(child: CircularProgressIndicator())
+                        : ElevatedButton(
+                            onPressed: () {
+                              context.read<AuthenticationBloc>().add(
+                                AuthenticationSignInRequested(
+                                  email: _emailController.text.trim(),
+                                  password: _passwordController.text,
+                                ),
+                              );
+                            },
+
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primary,
+                              foregroundColor: AppColors.textOnPrimary,
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                            ),
+                            child: const Text(
+                              'Log In',
+                              style: AppTextStyles.button,
+                            ),
+                          ),
+                  );
+                },
               ),
               const SizedBox(height: 20),
-
-              // // Social Login
-              // Center(
-              //   child: Column(
-              //     children: [
-              //       Text(
-              //         'Or Login With',
-              //         style: AppTextStyles.bodyMedium.copyWith(
-              //           color: AppColors.textSecondary,
-              //         ),
-              //       ),
-              //       const SizedBox(height: 24),
-              //       Row(
-              //         mainAxisAlignment: MainAxisAlignment.center,
-              //         children: [
-              //           _SocialButton(icon: Icons.g_mobiledata, color: AppColors.error, onPressed: () {}),
-              //           const SizedBox(width: 20),
-              //           _SocialButton(icon: Icons.camera_alt_outlined, color: Colors.purple, onPressed: () {}),
-              //           const SizedBox(width: 20),
-              //           _SocialButton(icon: Icons.flutter_dash_outlined, color: Colors.blue, onPressed: () {}),
-              //         ],
-              //       ),
-              //     ],
-              //   ),
-              // ),
-              // const SizedBox(height: 48),
-
               // Footer
               Center(
                 child: Row(

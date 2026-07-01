@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lawyer_bro/styles/app_colors.dart';
 import 'package:lawyer_bro/styles/app_text_styles.dart';
+import 'package:lawyer_bro/utils/local_storage.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // OnBoardScreen
@@ -52,7 +53,7 @@ class _OnBoardScreenState extends State<OnBoardScreen>
     super.initState();
     _splashAnimController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 700),
+      duration: const Duration(milliseconds: 600),
     );
     _splashFade = CurvedAnimation(
       parent: _splashAnimController,
@@ -64,7 +65,24 @@ class _OnBoardScreenState extends State<OnBoardScreen>
 
     // Show splash, then animate in
     _splashAnimController.forward();
-    Future.delayed(const Duration(milliseconds: 1800), _exitSplash);
+    _initializeApp();
+  }
+
+  Future<void> _initializeApp() async {
+    // Wait for at least 1 second and check login status concurrently
+    final minSplashDuration = Future.delayed(const Duration(seconds: 2));
+    final checkLogin = LocalDB.instance.isUserLogin();
+
+    final results = await Future.wait([minSplashDuration, checkLogin]);
+    final isUserLogged = results[1] as bool;
+
+    if (!mounted) return;
+
+    if (isUserLogged) {
+      Navigator.of(context).pushReplacementNamed('/home');
+    } else {
+      _exitSplash();
+    }
   }
 
   @override
