@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:lawyer_bro/features/home/screens/app_drawer.dart';
+import 'package:lawyer_bro/features/home/screens/home_page.dart';
 import 'package:lawyer_bro/styles/app_colors.dart';
 import 'package:lawyer_bro/styles/app_text_styles.dart';
 
@@ -20,21 +22,36 @@ class _HomeNavbarState extends State<HomeNavbar> {
   ];
 
   // Placeholder pages — replace with real screen widgets as you build them
-  static const List<Widget> _pages = [
-    _PlaceholderPage(label: 'Home'),
-    _PlaceholderPage(label: 'Search'),
-    _PlaceholderPage(label: 'Messages'),
-    _PlaceholderPage(label: 'Profile'),
-  ];
+  static const List<Widget> _pages = [HomePage()];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: _pages,
+      drawer: AppDrawer(),
+      appBar: AppBar(
+        title: Text(
+          "Hi.Sreenandh",
+          style: AppTextStyles.headingMedium.copyWith(
+            color: AppColors.darkSurface,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.notifications_none_outlined),
+            onPressed: () {},
+          ),
+          SizedBox(width: 14),
+          CircleAvatar(
+            radius: 22,
+            backgroundColor: Colors.grey.shade100,
+            backgroundImage: AssetImage('assets/images/user_avatar.png'),
+          ),
+          SizedBox(width: 14),
+        ],
       ),
+      body: IndexedStack(index: _selectedIndex, children: _pages),
       bottomNavigationBar: _AppNavBar(
         selectedIndex: _selectedIndex,
         items: _navItems,
@@ -63,9 +80,7 @@ class _AppNavBar extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: AppColors.surface,
-        border: Border(
-          top: BorderSide(color: AppColors.border, width: 1),
-        ),
+        border: Border(top: BorderSide(color: AppColors.border, width: 1)),
         boxShadow: [
           BoxShadow(
             color: AppColors.darkSurface.withValues(alpha: 0.06),
@@ -137,60 +152,6 @@ class _NavBarItem extends StatelessWidget {
                 ),
               ),
             ],
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Placeholder page — replace with real screens
-// ─────────────────────────────────────────────────────────────────────────────
-class _PlaceholderPage extends StatelessWidget {
-  const _PlaceholderPage({required this.label});
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(
-        title: Text(label),
-        backgroundColor: AppColors.background,
-        elevation: 0,
-      ),
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 72,
-              height: 72,
-              decoration: BoxDecoration(
-                color: AppColors.primarySurface,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: const Icon(
-                Icons.gavel_rounded,
-                color: AppColors.primary,
-                size: 36,
-              ),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              label,
-              style: AppTextStyles.headingMedium.copyWith(
-                color: AppColors.textPrimary,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Coming soon',
-              style: AppTextStyles.bodyMedium.copyWith(
-                color: AppColors.textSecondary,
-              ),
-            ),
           ],
         ),
       ),
